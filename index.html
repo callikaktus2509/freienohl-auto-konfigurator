@@ -63,9 +63,9 @@ button {
 
 <label>Modell
 <select class="price-option">
-    <option data-price="20000">Basis - 20.000€</option>
-    <option data-price="30000">Sport - 30.000€</option>
-    <option data-price="40000">Luxury - 40.000€</option>
+    <option data-price="20000">Basis - 20000€</option>
+    <option data-price="30000">Sport - 30000€</option>
+    <option data-price="40000">Luxus - 40000€</option>
 </select>
 </label>
 
@@ -119,29 +119,58 @@ Gesamtpreis: <span id="totalPrice">0€</span>
 </div>
 
 <script>
+const modelSelect = document.getElementById("model");
+const engineSelect = document.getElementById("engine");
 const selects = document.querySelectorAll(".price-option");
 const totalPrice = document.getElementById("totalPrice");
+
+// Motor-Optionen je Modell
+const engineOptions = {
+    basis: [
+        { name: "1.6L", price: 0 },
+        { name: "1.8L", price: 1500 }
+    ],
+    sport: [
+        { name: "2.0L Turbo", price: 5000 },
+        { name: "3.0L V6", price: 9000 }
+    ],
+    luxury: [
+        { name: "Elektro", price: 8000 },
+        { name: "Hybrid", price: 6000 }
+    ]
+};
+
+function updateEngines() {
+    const selectedModel = modelSelect.value;
+    engineSelect.innerHTML = "";
+
+    engineOptions[selectedModel].forEach(engine => {
+        const option = document.createElement("option");
+        option.textContent = `${engine.name} - ${engine.price.toLocaleString("de-DE")}€`;
+        option.dataset.price = engine.price;
+        engineSelect.appendChild(option);
+    });
+
+    calculateTotal();
+}
 
 function calculateTotal() {
     let total = 0;
 
-    selects.forEach(select => {
-        const price = parseInt(select.options[select.selectedIndex].dataset.price);
-        total += price;
+    document.querySelectorAll(".price-option").forEach(select => {
+        if (select.selectedIndex >= 0) {
+            const price = parseInt(select.options[select.selectedIndex].dataset.price);
+            total += price;
+        }
     });
 
     totalPrice.textContent = total.toLocaleString("de-DE") + "€";
 }
 
-selects.forEach(select => {
-    select.addEventListener("change", calculateTotal);
-});
+modelSelect.addEventListener("change", updateEngines);
+document.addEventListener("change", calculateTotal);
 
-calculateTotal();
-
-function saveConfig() {
-    alert("Konfiguration erfolgreich erstellt!\nPreis: " + totalPrice.textContent);
-}
+updateEngines();
 </script>
 
 </body>
