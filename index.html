@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Freienohl Auto Konfigurator</title>
-
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -63,18 +62,14 @@ button {
 
 <label>Modell
 <select id="model">
-    <option data-price="20000">Basis - 20000€</option>
-    <option data-price="30000">Sport - 30000€</option>
-    <option data-price="40000">Luxus - 40000€</option>
+    <option value="basis" data-price="20000">Basis - 20.000€</option>
+    <option value="sport" data-price="30000">Sport - 30.000€</option>
+    <option value="luxury" data-price="40000">Luxus - 40.000€</option>
 </select>
 </label>
 
 <label>Motor
 <select id="engine" class="price-option"></select>
-    <option data-price="0">1.6L - 0€</option>
-    <option data-price="5000">2.0L Turbo - 5.000€</option>
-    <option data-price="8000">Elektro - 8.000€</option>
-</select>
 </label>
 
 <label>Farbe
@@ -124,7 +119,7 @@ const engineSelect = document.getElementById("engine");
 const selects = document.querySelectorAll(".price-option");
 const totalPrice = document.getElementById("totalPrice");
 
-// Motor-Optionen je Modell
+// Motoroptionen je Modell
 const engineOptions = {
     basis: [
         { name: "1.6L", price: 0 },
@@ -143,28 +138,38 @@ const engineOptions = {
 function updateEngines() {
     const selectedModel = modelSelect.value;
     engineSelect.innerHTML = "";
-
     engineOptions[selectedModel].forEach(engine => {
         const option = document.createElement("option");
         option.textContent = `${engine.name} - ${engine.price.toLocaleString("de-DE")}€`;
         option.dataset.price = engine.price;
         engineSelect.appendChild(option);
     });
-
     calculateTotal();
 }
 
 function calculateTotal() {
     let total = 0;
-
     document.querySelectorAll(".price-option").forEach(select => {
         if (select.selectedIndex >= 0) {
             const price = parseInt(select.options[select.selectedIndex].dataset.price);
             total += price;
         }
     });
-
     totalPrice.textContent = total.toLocaleString("de-DE") + "€";
+}
+
+function saveConfig() {
+    let configText = "Deine Konfiguration:\n";
+    configText += `Modell: ${modelSelect.options[modelSelect.selectedIndex].text}\n`;
+    configText += `Motor: ${engineSelect.options[engineSelect.selectedIndex].text}\n`;
+
+    selects.forEach(select => {
+        if (select !== engineSelect) {
+            configText += `${select.previousElementSibling.textContent.trim()}: ${select.options[select.selectedIndex].text}\n`;
+        }
+    });
+    configText += `\nGesamtpreis: ${totalPrice.textContent}`;
+    alert(configText);
 }
 
 modelSelect.addEventListener("change", updateEngines);
