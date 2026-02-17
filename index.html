@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freienohl Auto Konfigurator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.total {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Freienohl Auto Konfigurator</h1>
+
+<div class="container">
+
+<label>Modell
+<select class="price-option">
+    <option data-price="20000">Basis - 20.000€</option>
+    <option data-price="30000">Sport - 30.000€</option>
+    <option data-price="40000">Luxury - 40.000€</option>
+</select>
+</label>
+
+<label>Motor
+<select class="price-option">
+    <option data-price="0">1.6L - 0€</option>
+    <option data-price="5000">2.0L Turbo - 5.000€</option>
+    <option data-price="8000">Elektro - 8.000€</option>
+</select>
+</label>
+
+<label>Farbe
+<select class="price-option">
+    <option data-price="0">Weiß - 0€</option>
+    <option data-price="500">Schwarz - 500€</option>
+    <option data-price="1000">Rot Metallic - 1.000€</option>
+</select>
+</label>
+
+<label>Felgen
+<select class="price-option">
+    <option data-price="0">Standard - 0€</option>
+    <option data-price="1200">18 Zoll - 1.200€</option>
+    <option data-price="2500">20 Zoll Sport - 2.500€</option>
+</select>
+</label>
+
+<label>Innenausstattung
+<select class="price-option">
+    <option data-price="0">Stoff - 0€</option>
+    <option data-price="2000">Teilleder - 2.000€</option>
+    <option data-price="4000">Vollleder - 4.000€</option>
+</select>
+</label>
+
+<label>Paket
+<select class="price-option">
+    <option data-price="0">Keins - 0€</option>
+    <option data-price="3000">Sportpaket - 3.000€</option>
+    <option data-price="3500">Technikpaket - 3.500€</option>
+    <option data-price="2500">Komfortpaket - 2.500€</option>
+</select>
+</label>
+
+<div class="total">
+Gesamtpreis: <span id="totalPrice">0€</span>
+</div>
+
+<button onclick="saveConfig()">Konfiguration anzeigen</button>
+
+</div>
+
+<script>
+const selects = document.querySelectorAll(".price-option");
+const totalPrice = document.getElementById("totalPrice");
+
+function calculateTotal() {
+    let total = 0;
+
+    selects.forEach(select => {
+        const price = parseInt(select.options[select.selectedIndex].dataset.price);
+        total += price;
+    });
+
+    totalPrice.textContent = total.toLocaleString("de-DE") + "€";
+}
+
+selects.forEach(select => {
+    select.addEventListener("change", calculateTotal);
+});
+
+calculateTotal();
+
+function saveConfig() {
+    alert("Konfiguration erfolgreich erstellt!\nPreis: " + totalPrice.textContent);
+}
+</script>
+
+</body>
+</html>
