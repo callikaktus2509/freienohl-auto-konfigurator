@@ -109,7 +109,7 @@ button {
 Gesamtpreis: <span id="totalPrice">0€</span>
 </div>
 
-<button onclick="saveConfig()">Konfiguration anzeigen</button>
+<button onclick="showConfig()">Konfiguration anzeigen</button>
 
 </div>
 
@@ -135,10 +135,11 @@ const engineOptions = {
     ]
 };
 
+// Motoren je Modell aktualisieren
 function updateEngines() {
-    const selectedModel = modelSelect.value;
+    const modelKey = modelSelect.value;
     engineSelect.innerHTML = "";
-    engineOptions[selectedModel].forEach(engine => {
+    engineOptions[modelKey].forEach(engine => {
         const option = document.createElement("option");
         option.textContent = `${engine.name} - ${engine.price.toLocaleString("de-DE")}€`;
         option.dataset.price = engine.price;
@@ -147,34 +148,38 @@ function updateEngines() {
     calculateTotal();
 }
 
+// Preisberechnung
 function calculateTotal() {
     let total = 0;
     document.querySelectorAll(".price-option").forEach(select => {
         if (select.selectedIndex >= 0) {
-            const price = parseInt(select.options[select.selectedIndex].dataset.price);
-            total += price;
+            total += parseInt(select.options[select.selectedIndex].dataset.price);
         }
     });
     totalPrice.textContent = total.toLocaleString("de-DE") + "€";
 }
 
-function saveConfig() {
-    let configText = "Deine Konfiguration:\n";
-    configText += `Modell: ${modelSelect.options[modelSelect.selectedIndex].text}\n`;
-    configText += `Motor: ${engineSelect.options[engineSelect.selectedIndex].text}\n`;
-
+// Konfiguration anzeigen
+function showConfig() {
+    let text = `Deine Konfiguration:\n`;
+    text += `Modell: ${modelSelect.options[modelSelect.selectedIndex].text}\n`;
+    text += `Motor: ${engineSelect.options[engineSelect.selectedIndex].text}\n`;
     selects.forEach(select => {
         if (select !== engineSelect) {
-            configText += `${select.previousElementSibling.textContent.trim()}: ${select.options[select.selectedIndex].text}\n`;
+            const label = select.previousElementSibling.textContent.trim();
+            const value = select.options[select.selectedIndex].text;
+            text += `${label}: ${value}\n`;
         }
     });
-    configText += `\nGesamtpreis: ${totalPrice.textContent}`;
-    alert(configText);
+    text += `\nGesamtpreis: ${totalPrice.textContent}`;
+    alert(text);
 }
 
+// Eventlistener
 modelSelect.addEventListener("change", updateEngines);
 document.addEventListener("change", calculateTotal);
 
+// Initialisierung
 updateEngines();
 </script>
 
