@@ -149,14 +149,20 @@ function updateEngines() {
     calculateTotal();
 }
 
-// Preisberechnung
+// Preisberechnung inkl. Modell
 function calculateTotal() {
     let total = 0;
-    document.querySelectorAll(".price-option").forEach(select => {
-        if (select.selectedIndex >= 0) {
+
+    // Modellpreis direkt hinzufügen
+    total += parseInt(modelSelect.options[modelSelect.selectedIndex].dataset.price);
+
+    // Restliche Optionen
+    selects.forEach(select => {
+        if (select !== modelSelect && select.selectedIndex >= 0) {
             total += parseInt(select.options[select.selectedIndex].dataset.price);
         }
     });
+
     totalPrice.textContent = total.toLocaleString("de-DE") + "€";
 }
 
